@@ -55,7 +55,7 @@ jobs:
         echo "{" >> $BUILD_TIME_FILE
         echo "    static partial void Initialize()" >> $BUILD_TIME_FILE
         echo "    {" >> $BUILD_TIME_FILE
-        echo "        BuildTimeString  = ""${{ CURRENT_TIME_STRING }}"";" >> $BUILD_TIME_FILE
+        echo "        BuildTimeString  = ""$CURRENT_TIME_STRING"";" >> $BUILD_TIME_FILE
         echo "    }" >> $BUILD_TIME_FILE
         echo "}" >> $BUILD_TIME_FILE
 
