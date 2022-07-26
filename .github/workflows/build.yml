@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  BUILD_TIME_FILE: ./BuildTime/BuildTimeProvider-Build.cs
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -32,15 +35,27 @@ jobs:
       run: |
         echo "CURRENT_TIME_STRING=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $env:GITHUB_ENV
 
-    - name: "Build time file"
+    - name: "Build time file (Windows)"
+      if: matrix.os == 'windows-latest'
       run: |
-        echo "public static partial class BuildTimeProvider                 " >> ./BuildTime/BuildTimeProvider-Build.cs
-        echo "{                                                             " >> ./BuildTime/BuildTimeProvider-Build.cs
-        echo "    static partial void Initialize()                          " >> ./BuildTime/BuildTimeProvider-Build.cs
-        echo "    {                                                         " >> ./BuildTime/BuildTimeProvider-Build.cs
-        echo "        BuildTimeString  = ""${{ env.CURRENT_TIME_STRING }}"";" >> ./BuildTime/BuildTimeProvider-Build.cs
-        echo "    }                                                         " >> ./BuildTime/BuildTimeProvider-Build.cs
-        echo "}                                                             " >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "public static partial class BuildTimeProvider" >> $env:BUILD_TIME_FILE
+        echo "{" >> $env:BUILD_TIME_FILE
+        echo "    static partial void Initialize()" >> $env:BUILD_TIME_FILE
+        echo "    {" >> $env:BUILD_TIME_FILE
+        echo "        BuildTimeString  = ""${{ env.CURRENT_TIME_STRING }}"";" >> $env:BUILD_TIME_FILE
+        echo "    }" >> $env:BUILD_TIME_FILE
+        echo "}" >> $env:BUILD_TIME_FILE
+
+    - name: "Build time file (Linux)"
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        echo "public static partial class BuildTimeProvider" >> $BUILD_TIME_FILE
+        echo "{" >> $BUILD_TIME_FILE
+        echo "    static partial void Initialize()" >> $BUILD_TIME_FILE
+        echo "    {" >> $BUILD_TIME_FILE
+        echo "        BuildTimeString  = ""${{ CURRENT_TIME_STRING }}"";" >> $BUILD_TIME_FILE
+        echo "    }" >> $BUILD_TIME_FILE
+        echo "}" >> $BUILD_TIME_FILE
 
     - name: Run application
       run: dotnet run --project ./BuildTime/BuildTime.csproj
