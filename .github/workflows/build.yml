@@ -32,10 +32,14 @@ jobs:
     - name: Build console
       run: dotnet build ./BuildTime/BuildTime.csproj --no-restore
 
+    - name: Get current date
+      run: |
+        echo "CURRENT_TIME_STRING=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $env:GITHUB_ENV
+        echo "CURRENT_TIME_STRING=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+
     - name: "Build time file (Windows)"
       if: matrix.os == 'windows-latest'
       run: |
-        echo "CURRENT_TIME_STRING=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $env:GITHUB_ENV
         echo "public static partial class BuildTimeProvider" >> $env:BUILD_TIME_FILE
         echo "{" >> $env:BUILD_TIME_FILE
         echo "    static partial void Initialize()" >> $env:BUILD_TIME_FILE
@@ -52,7 +56,6 @@ jobs:
     - name: "Build time file (Linux)"
       if: matrix.os == 'ubuntu-latest'
       run: |
-        echo "CURRENT_TIME_STRING=$(date +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
         echo "public static partial class BuildTimeProvider" >> $BUILD_TIME_FILE
         echo "{" >> $BUILD_TIME_FILE
         echo "    static partial void Initialize()" >> $BUILD_TIME_FILE
