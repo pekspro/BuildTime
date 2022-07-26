@@ -56,13 +56,13 @@ jobs:
     - name: "Build time file (Linux)"
       if: matrix.os == 'ubuntu-latest'
       run: |
-        echo 'public static partial class BuildTimeProvider' >> $BUILD_TIME_FILE
-        echo '{' >> $BUILD_TIME_FILE
-        echo '    static partial void Initialize()' >> $BUILD_TIME_FILE
-        echo '    {' >> $BUILD_TIME_FILE
-        echo '        BuildTimeString  = "$CURRENT_TIME_STRING";' >> $BUILD_TIME_FILE
-        echo '    }' >> $BUILD_TIME_FILE
-        echo '}' >> $BUILD_TIME_FILE
+        echo "public static partial class BuildTimeProvider" >> $BUILD_TIME_FILE
+        echo "{" >> $BUILD_TIME_FILE
+        echo "    static partial void Initialize()" >> $BUILD_TIME_FILE
+        echo "    {" >> $BUILD_TIME_FILE
+        echo "        BuildTimeString  = \"$CURRENT_TIME_STRING\";" >> $BUILD_TIME_FILE
+        echo "    }" >> $BUILD_TIME_FILE
+        echo "}" >> $BUILD_TIME_FILE
 
     - name: "Print build time file (Linux)"
       if: matrix.os == 'ubuntu-latest'
