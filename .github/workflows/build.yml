@@ -9,6 +9,7 @@ on:
 
 env:
   BUILD_TIME_FILE: ./BuildTime/BuildTimeProvider-Build.cs
+  CURRENT_TIME_STRING: what
 
 jobs:
   build:
