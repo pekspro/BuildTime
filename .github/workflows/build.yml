@@ -59,5 +59,10 @@ jobs:
         echo "    }" >> $BUILD_TIME_FILE
         echo "}" >> $BUILD_TIME_FILE
 
+    - name: "Print build time file (Linux)"
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cat $BUILD_TIME_FILE
+
     - name: Run application
       run: dotnet run --project ./BuildTime/BuildTime.csproj
