@@ -1,0 +1,46 @@
+name: Build test
+
+on:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BUILD_TIME_FILE: ./BuildTime/BuildTimeProvider-Build.cs
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore ./BuildTime/
+      
+    - name: Build console
+      run: dotnet build ./BuildTime/BuildTime.csproj --no-restore
+
+    - name: Get current date
+      run: |
+        echo "CURRENT_TIME_STRING=$(date +'%Y%m%dT%H%M%SZ')" >> $env:GITHUB_ENV
+
+    - name: "Build time file"
+      run: |
+        echo "public static partial class BuildTimeProvider" >> $env:BUILD_TIME_FILE
+        echo "{" >> $env:BUILD_TIME_FILE
+        echo "    static partial void Initialize()" >> $env:BUILD_TIME_FILE
+        echo "    {" >> $env:BUILD_TIME_FILE
+        echo "        BuildTimeString  = ""${{ env.CURRENT_TIME_STRING }}"";" >> $env:BUILD_TIME_FILE
+        echo "    }" >> $env:BUILD_TIME_FILE
+        echo "}" >> $env:BUILD_TIME_FILE
+
+    - name: Run application
+      run: dotnet run --project ./BuildTime/BuildTime.csproj
