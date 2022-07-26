@@ -7,9 +7,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  BUILD_TIME_FILE: ./BuildTime/BuildTimeProvider-Build.cs
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -37,13 +34,13 @@ jobs:
 
     - name: "Build time file"
       run: |
-        echo "public static partial class BuildTimeProvider" >> $env:BUILD_TIME_FILE
-        echo "{" >> $env:BUILD_TIME_FILE
-        echo "    static partial void Initialize()" >> $env:BUILD_TIME_FILE
-        echo "    {" >> $env:BUILD_TIME_FILE
-        echo "        BuildTimeString  = ""${{ env.CURRENT_TIME_STRING }}"";" >> $env:BUILD_TIME_FILE
-        echo "    }" >> $env:BUILD_TIME_FILE
-        echo "}" >> $env:BUILD_TIME_FILE
+        echo "public static partial class BuildTimeProvider                 " >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "{                                                             " >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "    static partial void Initialize()                          " >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "    {                                                         " >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "        BuildTimeString  = ""${{ env.CURRENT_TIME_STRING }}"";" >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "    }                                                         " >> ./BuildTime/BuildTimeProvider-Build.cs
+        echo "}                                                             " >> ./BuildTime/BuildTimeProvider-Build.cs
 
     - name: Run application
       run: dotnet run --project ./BuildTime/BuildTime.csproj
